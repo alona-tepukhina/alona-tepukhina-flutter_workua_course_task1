@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course_hometask1/homepage.dart';
 import 'credentials.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -14,6 +15,13 @@ class _LoginScreenState extends State<LoginScreen> {
   final credentials = Credentials();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool rememberUser = false;
+
+  void setUserPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('rememberUser', true);
+    //print(prefs.getBool('rememberUser'));
+  }
 
   @override
   void dispose() {
@@ -67,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 //const TextField(
                 TextFormField(
-                  autofocus: true,
+                  //autofocus: true,
                   controller: _passwordController,
                   //obscureText: true,
                   decoration: const InputDecoration(
@@ -90,8 +98,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 Row(
                   children: [
-                    Checkbox(value: false, onChanged: (value) {}),
-                    const Text('Remember password'),
+                    Checkbox(
+                        value: rememberUser,
+                        onChanged: (value) {
+                          setState(() {
+                            rememberUser = value!;
+                          });
+                        }),
+                    const Text('Remember me'),
                   ],
                 ),
                 const SizedBox(
@@ -102,6 +116,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     if (_formKey.currentState!.validate() &&
                         (_usernameController.text == credentials.username) &&
                         (_passwordController.text == credentials.password)) {
+                      if (rememberUser) {
+                        setUserPreferences();
+                      }
+
                       ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Login Successful')));
                       Navigator.push(
