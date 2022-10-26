@@ -17,7 +17,7 @@ class _MySplashScreenState extends State<MySplashScreen> {
 
   Future<void> getUserPreferences() async {
     final prefs = await SharedPreferences.getInstance();
-    //await prefs.remove('rememberUser');
+
     preferenceRememberUser = prefs.getBool('rememberUser') ?? false;
   }
 
@@ -25,24 +25,13 @@ class _MySplashScreenState extends State<MySplashScreen> {
   void initState() {
     super.initState();
     getUserPreferences();
-    print(preferenceRememberUser);
-    // Timer(
-    //   const Duration(seconds: 3),
-    //   () => Navigator.push(
-    //     context,
-    //     MaterialPageRoute(
-    //       builder: (context) =>
-    //           (preferenceRememberUser) ? HomePage() : LoginScreen(),
-    //     ),
-    //   ),
-    // );
 
-    if (preferenceRememberUser == true) {
-      navigateTo = '/homepage';
-    }
-
-    Timer(const Duration(seconds: 3),
-        () => Navigator.pushNamed(context, navigateTo));
+    Timer(const Duration(seconds: 3), () {
+      if (preferenceRememberUser == true) {
+        navigateTo = '/homepage';
+      }
+      Navigator.pushNamed(context, navigateTo);
+    });
   }
 
   @override
