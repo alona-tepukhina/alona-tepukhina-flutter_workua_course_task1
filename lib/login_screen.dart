@@ -20,7 +20,6 @@ class _LoginScreenState extends State<LoginScreen> {
   void setUserPreferences() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('rememberUser', true);
-    //print(prefs.getBool('rememberUser'));
   }
 
   @override
